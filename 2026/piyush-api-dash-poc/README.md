@@ -1,34 +1,31 @@
-# API Dash MCP PoC
+# Piyush API Dashboard PoC
 
-## Author
-Piyush Sahu
+This PoC includes:
 
-## Description
-This project is a Proof of Concept for API Dash using MCP architecture. It simulates an agent-based system to fetch and display sales data.
+- **Node.js + Express backend** with a `/sales-data` endpoint.
+- **React frontend dashboard** with a button to fetch and display products.
 
-## Features
-- MCP-style API server
-- React frontend dashboard
-- Fetch and display product data
-- Simple agent-like interaction
+## Project Structure
 
-## Tech Stack
-- Node.js
-- Express
-- React
+- `backend/` - Express API server (default port `4000`)
+- `frontend/` - React app powered by Vite (default port `5173`)
 
-## How to Run
+## Run Locally
 
-### Backend
+### 1) Start backend
+
+```bash
+cd backend
 npm install
-node server.js
+npm run start
+```
 
-### Frontend
-cd client
+### 2) Start frontend
+
+```bash
+cd frontend
 npm install
-npm start
+npm run dev
+```
 
-## Future Scope
-- Add charts
-- Add filters
-- Improve UI
+Open `http://localhost:5173` in your browser and click **Fetch Sales Data**.

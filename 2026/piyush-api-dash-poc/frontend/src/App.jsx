@@ -13,6 +13,7 @@ const styles = {
   },
   controls: {
     display: 'flex',
+    flexWrap: 'wrap',
     gap: '0.75rem',
     marginBottom: '1rem'
   },
@@ -55,8 +56,10 @@ const styles = {
 function App() {
   const [products, setProducts] = useState([]);
   const [insight, setInsight] = useState('');
+  const [mcpResult, setMcpResult] = useState(null);
   const [loadingSales, setLoadingSales] = useState(false);
   const [loadingInsight, setLoadingInsight] = useState(false);
+  const [loadingMcp, setLoadingMcp] = useState(false);
   const [error, setError] = useState('');
 
   const fetchSalesData = async () => {
@@ -65,9 +68,7 @@ function App() {
 
     try {
       const response = await fetch('http://localhost:4000/sales-data');
-      if (!response.ok) {
-        throw new Error('Failed to fetch sales data');
-      }
+      if (!response.ok) throw new Error('Failed to fetch sales data');
       const data = await response.json();
       setProducts(data.products || []);
     } catch (err) {
@@ -83,15 +84,29 @@ function App() {
 
     try {
       const response = await fetch('http://localhost:4000/agent-insight');
-      if (!response.ok) {
-        throw new Error('Failed to fetch AI insight');
-      }
+      if (!response.ok) throw new Error('Failed to fetch AI insight');
       const data = await response.json();
       setInsight(data.insight || 'No insight available.');
     } catch (err) {
       setError(err.message);
     } finally {
       setLoadingInsight(false);
+    }
+  };
+
+  const runMcpQuery = async () => {
+    setLoadingMcp(true);
+    setError('');
+
+    try {
+      const response = await fetch('http://localhost:4000/mcp-query');
+      if (!response.ok) throw new Error('Failed to run MCP query');
+      const data = await response.json();
+      setMcpResult(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoadingMcp(false);
     }
   };
 
@@ -106,6 +121,9 @@ function App() {
         <button style={styles.button} onClick={fetchInsight} disabled={loadingInsight}>
           {loadingInsight ? 'Generating...' : 'Get AI Insight'}
         </button>
+        <button style={styles.button} onClick={runMcpQuery} disabled={loadingMcp}>
+          {loadingMcp ? 'Running Agent...' : 'Run AI Agent'}
+        </button>
       </div>
 
       {error && <p style={styles.error}>{error}</p>}
@@ -113,6 +131,14 @@ function App() {
       {insight && (
         <section style={styles.insightBox}>
           <strong>AI Insight:</strong> {insight}
+        </section>
+      )}
+
+      {mcpResult && (
+        <section style={styles.insightBox}>
+          <strong>MCP Agent Result:</strong>
+          <p>{mcpResult.insight}</p>
+          <p style={styles.meta}>Tools: {mcpResult.workflow?.toolsUsed?.join(', ')}</p>
         </section>
       )}
 

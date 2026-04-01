@@ -1,14 +1,15 @@
 # API Dashboard PoC
 
-This Proof of Concept demonstrates a simple full-stack sales dashboard using an Express backend and a React (Vite) frontend.
+This Proof of Concept demonstrates a minimal full-stack sales dashboard using an Express backend and a React (Vite) frontend.
 
 ## Features
 
 - Backend API with health check endpoint
-- Backend sales data endpoint serving sample product revenue data
-- MCP-style simulated agent endpoint for sales insights
-- Frontend buttons for fetching sales data and AI insight
-- Product cards with basic dashboard styling
+- Sales data endpoint with sample product revenue
+- Simulated AI insight endpoint (`/agent-insight`)
+- MCP-style query endpoint (`/mcp-query`) with simulated tool execution
+- Frontend actions for sales fetch, insight fetch, and agent run
+- Clean dashboard cards for product display
 
 ## Tech Stack
 
@@ -32,13 +33,16 @@ This Proof of Concept demonstrates a simple full-stack sales dashboard using an 
   README.md
 ```
 
-## MCP Integration (Simulated)
+## MCP Workflow (Simulated)
 
-This PoC is inspired by MCP Sales Analytics architecture patterns:
+Inspired by AWS MCP Sales Analytics architecture:
 
-- The **backend** acts like an MCP-style server exposing tools/data endpoints.
-- The **frontend** acts like an MCP-style client requesting data and insights.
-- `GET /agent-insight` simulates AI agent behavior by returning a focused business recommendation from sales context.
+1. **MCP Client (Frontend)** sends a request when user clicks **Run AI Agent**.
+2. **MCP Server (Backend)** receives `/mcp-query` and coordinates tool calls.
+3. **Tools (Simulated in backend)** compute top product, category revenue, and total revenue.
+4. **Agent Response** returns workflow metadata + recommendation insight to the UI.
+
+This keeps the project minimal while demonstrating MCP-style responsibilities (agent + server + tools).
 
 ## How to Run
 
@@ -50,15 +54,14 @@ npm install
 npm start
 ```
 
-The backend runs on `http://localhost:4000`.
+Backend runs on `http://localhost:4000`.
 
-- Health check: `GET http://localhost:4000/health`
-- Sales data: `GET http://localhost:4000/sales-data`
-- Agent insight: `GET http://localhost:4000/agent-insight`
+- Health: `GET /health`
+- Sales Data: `GET /sales-data`
+- Agent Insight: `GET /agent-insight`
+- MCP Query: `GET /mcp-query`
 
 ### 2) Start frontend
-
-Open a second terminal:
 
 ```bash
 cd 2026/piyush-api-dash-poc/frontend
@@ -66,4 +69,7 @@ npm install
 npm run dev
 ```
 
-Vite will print a local URL (usually `http://localhost:5173`). Open it and click **Fetch Sales Data** and **Get AI Insight**.
+Open the printed local Vite URL (typically `http://localhost:5173`) and use:
+- **Fetch Sales Data**
+- **Get AI Insight**
+- **Run AI Agent**
